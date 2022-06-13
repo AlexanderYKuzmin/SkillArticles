@@ -40,7 +40,7 @@ class RootActivity : AppCompatActivity() {
         setupToolbar()
         setupBottombar()
         setupSubmenu()
-        setupSearch()
+        //setupSearch()
 
         val vmFactory = ViewModelFactory("0")
         viewModel = ViewModelProvider(this, vmFactory)[ArticleViewModel::class.java]
@@ -135,12 +135,6 @@ class RootActivity : AppCompatActivity() {
         toolbar.subtitle = data.category ?: "loading..."
         if (data.categoryIcon != null) toolbar.logo = getDrawable(data.categoryIcon as Int)
 
-        Log.d("Search_Panel", "Before is open. data.isSearch = ${data.isSearch}")
-        if (data.isSearch) {
-            Log.d("Search_Panel", "search is open. data.isSearch = ${data.isSearch}")
-            search_panel.open()
-            et_search.setText(data.searchQuery)
-        } else search_panel.close()
     }
 
     private fun setupToolbar() {
@@ -181,11 +175,11 @@ class RootActivity : AppCompatActivity() {
         btn_settings.setOnClickListener { viewModel.handleToggleMenu() }
     }
 
-    private fun setupSearch() {
+    /*private fun setupSearch() {
         et_search.setOnFocusChangeListener { v, hasFocus ->
             if (!hasFocus) {
                 viewModel.handleSearch(et_search.text.toString())
             }
         }
-    }
+    }*/
 }

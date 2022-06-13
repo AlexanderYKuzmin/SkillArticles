@@ -26,18 +26,6 @@
             android:elevation="4dp"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <ru.skillbranch.skillarticles.ui.custom.Search
-        android:id="@+id/search_panel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        app:layout_dodgeInsetEdges="top"
-        android:elevation="4dp"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-    </ru.skillbranch.skillarticles.ui.custom.Search>
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
