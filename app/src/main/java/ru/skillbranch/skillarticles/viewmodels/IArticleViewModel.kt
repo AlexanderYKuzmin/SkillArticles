@@ -72,12 +72,12 @@ interface IArticleViewModel {
      * обрабока перехода в режим поиска searchView
      * при нажатии на пункту меню тулбара необходимо отобразить searchView и сохранить состояние при
      * изменении конфигурации (пересоздании активити)
-     */
+     *//*
     fun handleSearchMode(isSearch: Boolean)
 
-    /**
+    *//**
      * обрабока поискового запроса, необходимо сохранить поисковый запрос и отображать его в
      * searchView при изменении конфигурации (пересоздании активити)
-     */
-    fun handleSearch(query: String?)
+     *//*
+    fun handleSearch(query: String?)*/
 }

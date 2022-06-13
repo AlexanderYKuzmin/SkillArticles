@@ -117,14 +117,6 @@ class ArticleViewModel(private val articleId: String) :
     override fun handleToggleMenu() {
         updateState { it.copy(isShowMenu = !it.isShowMenu)}
     }
-
-    override fun handleSearchMode(isSearch: Boolean) {
-        updateState { it.copy(isSearch = isSearch) }
-    }
-
-    override fun handleSearch(query: String?) {
-        updateState { it.copy(searchQuery = query) }
-    }
 }
 
 data class ArticleState(
@@ -150,3 +142,12 @@ data class ArticleState(
     val content: List<Any?> = emptyList(),
     val reviews: List<Any?> = emptyList(),
 )
+/*
+
+override fun handleSearchMode(isSearch: Boolean) {
+    updateState { it.copy(isSearch = isSearch) }
+}
+
+override fun handleSearch(query: String?) {
+    updateState { it.copy(searchQuery = query) }
+}*/
