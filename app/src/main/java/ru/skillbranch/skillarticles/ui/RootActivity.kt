@@ -67,7 +67,7 @@ class RootActivity : AppCompatActivity() {
             R.id.action_search -> {
                 item.isChecked = !item.isChecked
                 item.icon = getDrawable(getIconMenuItem(item.isChecked))
-                viewModel.handleSearchMode(item.isChecked)
+                //viewModel.handleSearchMode(item.isChecked)
             }
         }
         return true
