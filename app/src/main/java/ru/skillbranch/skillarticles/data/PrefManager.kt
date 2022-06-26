@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.zip
 import ru.skillbranch.skillarticles.data.delegates.PrefDelegate
-import ru.skillbranch.skillarticles.viewmodels.App
+import ru.skillbranch.skillarticles.App
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 

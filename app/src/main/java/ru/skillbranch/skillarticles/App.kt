@@ -1,4 +1,4 @@
-package ru.skillbranch.skillarticles.viewmodels
+package ru.skillbranch.skillarticles
 
 import android.app.Application
 import android.content.Context
