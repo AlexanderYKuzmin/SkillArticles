@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewAnimationUtils
 import android.widget.TextView
@@ -13,6 +14,7 @@ import androidx.core.animation.doOnEnd
 import androidx.core.animation.doOnStart
 import com.google.android.material.shape.MaterialShapeDrawable
 import ru.skillbranch.skillarticles.R
+import ru.skillbranch.skillarticles.databinding.LayoutSubmenuBinding
 import ru.skillbranch.skillarticles.extensions.dpToPx
 import ru.skillbranch.skillarticles.ui.custom.behaviors.SubmenuBehavior
 import kotlin.math.hypot
@@ -22,6 +24,9 @@ class ArticleSubmenu @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr), CoordinatorLayout.AttachedBehavior {
+
+    val binding: LayoutSubmenuBinding = LayoutSubmenuBinding.inflate(LayoutInflater.from(context), this, true)
+
     var isOpen = false
     private var centerX: Float = context.dpToPx(200)
     private var centerY: Float = context.dpToPx(96)
@@ -31,7 +36,7 @@ class ArticleSubmenu @JvmOverloads constructor(
     }
 
     init {
-        View.inflate(context, R.layout.layout_submenu, this)
+        //View.inflate(context, R.layout.layout_submenu, this)
         val materialBg = MaterialShapeDrawable.createWithElevationOverlay(context)
         materialBg.elevation = elevation
         background = materialBg
