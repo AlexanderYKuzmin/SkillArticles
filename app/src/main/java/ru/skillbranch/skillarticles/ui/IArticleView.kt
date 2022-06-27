@@ -11,7 +11,7 @@ interface IArticleView {
 
     fun setupBottombar()
 
-    fun renderBottombar(data: BottombarData)
+    fun renderBotombar(data: BottombarData)
 
     fun renderSubmenu(data: SubmenuData)
 

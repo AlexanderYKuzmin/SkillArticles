@@ -64,7 +64,7 @@ class RootActivity : AppCompatActivity(), IArticleView {
         //val vmFactory = ViewModelFactory("0")
         //viewModel = ViewModelProvider(this, vmFactory)[ArticleViewModel::class.java]
         viewModel.observeState(this, ::renderUi)
-        viewModel.observeSubState(this, ArticleState::toBottombarData, ::renderBottombar)
+        viewModel.observeSubState(this, ArticleState::toBottombarData, ::renderBotombar)
         viewModel.observeSubState(this, ArticleState::toSubmenuData, ::renderSubmenu)
 
         viewModel.observeNotification(this) {
@@ -174,7 +174,7 @@ class RootActivity : AppCompatActivity(), IArticleView {
         snackbar.show()
     }
 
-    override fun renderBottombar(data: BottombarData) {
+    override fun renderBotombar(data: BottombarData) {
         Log.d("RootActivity", "renderBottombar $data")
         with(vbBottombar) {
             btnSettings.isChecked = data.isShowMenu
