@@ -1,14 +1,16 @@
 package ru.skillbranch.skillarticles.viewmodels
 
+import android.os.Bundle
 import androidx.annotation.UiThread
 import androidx.annotation.VisibleForTesting
 import androidx.core.os.bundleOf
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
+import java.io.Serializable
 import java.lang.IllegalArgumentException
 import java.lang.RuntimeException
 
-abstract class BaseViewModel<T>(initState: T, private val savedStateHandle: SavedStateHandle) : ViewModel() {
+abstract class BaseViewModel<T>(initState: T, private val savedStateHandle: SavedStateHandle) : ViewModel() where T : VMState  {
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     val notifications = MutableLiveData<Event<Notify>>()
 
@@ -19,7 +21,11 @@ abstract class BaseViewModel<T>(initState: T, private val savedStateHandle: Save
      */
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     val state: MediatorLiveData<T> = MediatorLiveData<T>().apply {
-        value = initState
+        val restoredState = savedStateHandle.get<Any>("state")?.let {
+            if (it is Bundle) initState.fromBundle(it) as? T
+            else it as T
+        }
+        value = restoredState ?: initState
     }
 
     /***
@@ -80,11 +86,11 @@ abstract class BaseViewModel<T>(initState: T, private val savedStateHandle: Save
     }
 
 
-    fun restoreState() {
+    /*fun restoreState() {
         val restoredState = savedStateHandle.get<T>("state") //под капотом unchecked cast и, если вернется не тип не Т, то никакого исключения не будет
         restoredState ?: return
         state.value = restoredState!!
-    }
+    }*/
 }
 
 class ViewModelFactory(owner: SavedStateRegistryOwner, private val params: String) : AbstractSavedStateViewModelFactory(owner, bundleOf()) {
@@ -140,4 +146,9 @@ sealed class Notify(val message: String) {
         val errLabel: String?,
         val errHandler: (() -> Unit)?
     ) : Notify(msg)
+}
+
+interface VMState : Serializable{
+    fun toBundle(): Bundle
+    fun fromBundle(bundle: Bundle): VMState
 }

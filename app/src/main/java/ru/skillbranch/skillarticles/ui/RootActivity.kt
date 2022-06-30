@@ -121,10 +121,10 @@ class RootActivity : AppCompatActivity(), IArticleView {
         super.onSaveInstanceState(outState, outPersistentState)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+    /*override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         viewModel.restoreState()
         super.onRestoreInstanceState(savedInstanceState)
-    }
+    }*/
 
     /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
