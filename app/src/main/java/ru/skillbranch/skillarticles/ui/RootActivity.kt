@@ -74,7 +74,6 @@ class RootActivity : AppCompatActivity(), IArticleView {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        Log.d("RootActivity", "what button will be first?")
         menuInflater.inflate(R.menu.main_menu, menu)
         val menuItem = menu.findItem(R.id.action_search)
         searchView = (menuItem.actionView as SearchView)
@@ -82,7 +81,6 @@ class RootActivity : AppCompatActivity(), IArticleView {
 
         //restore SearchView
         if (viewModel.currentState.isSearch) {
-            Log.d("RootActivity", "awaiting is menu item pressed?")
             menuItem.expandActionView()
             searchView.setQuery(viewModel.currentState.searchQuery, false)
             searchView.requestFocus()
@@ -93,7 +91,6 @@ class RootActivity : AppCompatActivity(), IArticleView {
         menuItem?.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
 
             override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                Log.d("RootActivity", "menuItem pressed!")
                 viewModel.handleSearchMode(true)
                 return true
             }
