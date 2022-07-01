@@ -173,13 +173,11 @@ class RootActivity : AppCompatActivity(), IArticleView {
     }
 
     override fun renderBotombar(data: BottombarData) {
-        Log.d("RootActivity", "renderBottombar $data")
         with(vbBottombar) {
             btnSettings.isChecked = data.isShowMenu
             btnLike.isChecked = data.isLike
             btnBookmark.isChecked = data.isBookmark
         }
-        Log.d("RootActivity", "results count: ${data.resultsCount}")
         if (data.isSearch) showSearchbar(data.resultsCount, data.searchPosition)
         else hideSearchbar()
     }
@@ -196,7 +194,6 @@ class RootActivity : AppCompatActivity(), IArticleView {
     }
 
     override fun renderUi(data: ArticleState) {
-        Log.d("RootActivity", "renderUI ${data.title}")
         delegate.localNightMode =
             if (data.isDarkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
 
