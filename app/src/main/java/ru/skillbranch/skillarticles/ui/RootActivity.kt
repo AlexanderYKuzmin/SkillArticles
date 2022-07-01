@@ -47,7 +47,7 @@ class RootActivity : AppCompatActivity(), IArticleView {
     private lateinit var searchView: SearchView
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val bgColor by AttrValue(R.attr.colorSecondary)
+    val bgColor by AttrValue(R.attr.colorAccent)
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val fgColor by AttrValue(R.attr.colorOnSecondary)
 
