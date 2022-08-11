@@ -6,21 +6,26 @@ object MarkdownParser {
     private val LINE_SEPARATOR = System.getProperty("line.separator") ?: "\n"
 
     //group regex
-    private const val UNORDERED_LIST_ITEM_GROUP = "(^[*+-] .+$)"
-    private const val HEADER_GROUP = "(^#{1,6} .+?$)"
-    private const val QUOTE_GROUP = "(^> .+?$)"
-    private const val ITALIC_GROUP = "((?<!\\*)\\*[^*].*?[^*]?\\*(?!\\*)|(?<!_)_[^_].*?[^_]?_(?!_))"
+    private const val UNORDERED_LIST_ITEM_GROUP = "(^[*+-] .+$)"                                        //1
+    private const val HEADER_GROUP = "(^#{1,6} .+?$)"                                                   //2
+    private const val QUOTE_GROUP = "(^> .+?$)"                     //3
+    private const val ITALIC_GROUP = "((?<!\\*)\\*[^*].*?[^*]?\\*(?!\\*)|(?<!_)_[^_].*?[^_]?_(?!_))"   //4
     private const val BOLD_GROUP =
-        "((?<!\\*)\\*{2}[^*].*?[^*]?\\*{2}(?!\\*)|(?<!\\_)_{2}[^_].*?[^_]?_{2}(?!_))"
-    private const val STRIKE_GROUP = "((?<!~)~{2}[^~].*?[^~]?~{2}(?!~))"
-    private const val RULE_GROUP = "(^[-_*]{3}$)"
-    private const val INLINE_GROUP = "(?<!`)`[^`\\s].*?[^`\\s]?`(?!`))"
-    private const val LINK_GROUP = "(\\[[^\\[\\]*?]\\(.+?\\))|^\\[*?]\\(.*?)\\))"
+        "((?<!\\*)\\*{2}[^*].*?[^*]?\\*{2}(?!\\*)|(?<!\\_)_{2}[^_].*?[^_]?_{2}(?!_))" //5
+    private const val STRIKE_GROUP = "((?<!~)~{2}[^~].*?[^~]?~{2}(?!~))" //6
+    private const val RULE_GROUP = "(^[-_*]{3}$)" //7
+    private const val INLINE_GROUP = "((?<!`)`[^`\\s].*?[^`\\s]?`(?!`))" //8
+    private const val LINK_GROUP = "((\\[[^\\[\\]]*?\\]\\(.+?\\))|(^\\[*?]\\(.*?)\\))"   //9 (10, 11)
+    private const val ORDERED_LIST_ITEM_GROUP = "(^\\d+\\.\\s.+$)" //12
+    private const val IMAGE_GROUP = "(^!\\[[^\\[\\]]*?\\]\\(.+?\\))" //13
+    //private const val MULTILINE_GROUP = "(```[^\\s]((.+\\n)+)*.+```)" //14
+    private const val MULTILINE_GROUP = "(```[^\\s](.+)```|```[^\\s]((.+\\n)+)*.+```)" //14
 
     //result regex
     const val MARKDOWN_GROUPS =
         "$UNORDERED_LIST_ITEM_GROUP|$HEADER_GROUP|$QUOTE_GROUP|$ITALIC_GROUP" +
-                "|$BOLD_GROUP|$STRIKE_GROUP|$RULE_GROUP|$INLINE_GROUP|$LINK_GROUP"
+                "|$BOLD_GROUP|$STRIKE_GROUP|$RULE_GROUP|$INLINE_GROUP|$LINK_GROUP" +
+                "|$ORDERED_LIST_ITEM_GROUP|$IMAGE_GROUP|$MULTILINE_GROUP"
 
     private val elementsPattern by lazy { Pattern.compile(MARKDOWN_GROUPS, Pattern.MULTILINE) }
 
@@ -31,7 +36,16 @@ object MarkdownParser {
     }
 
     fun clear(string: String): String? {
-        return null
+        val dividerRemoved = string.replace("_{3}|\\*{3}|-{3}".toRegex(), " ")
+        return dividerRemoved.replace((
+                "#{1,6} " + // Headers
+                "|(?<!`)\\[|\\](?!`)|(?<!`)\\(.+\\)(?!`)" + //Links
+                "|(?<!.)([-+*] )" +
+                "|((?<![ \\w])[-+](?![.]))|((?<![*_~])[*_~]{1,3}(?!\\s))|(?<!\\s)([*_~]{1,3}(?=[*_~\\s\\W]))" + //italic, bold, strike and others
+                "|((?<!.)> )" + //Quotes
+                "|((?<!.)\\d+\\. )" + // Ordered
+                "|((?<= )`(?![ `])(?=.*`))|((?<=`.*)(?<!`)`(?=[ \\n]))|((?<=\\s)`{3}(?!\\s))|(?<!\\s)`{3}(?=\\s)" //Inline & Multiline
+                ).toRegex(), "")
     }
 
     private fun findElements(string: CharSequence): List<Element> {
@@ -51,7 +65,7 @@ object MarkdownParser {
             var text: CharSequence
 
             //groups range for iterate by groups
-            val groups = 1..9
+            val groups = 1..15
             var group = -1
             for (gr in groups) {
                 if (matcher.group(gr) != null) {
@@ -59,10 +73,14 @@ object MarkdownParser {
                     break
                 }
             }
-
+            parents.add(Element.Text("Matcher groups = ${matcher.groupCount()}"))
             when (group) {
                 //NOT FOUND -> break
-                -1 -> break@loop
+
+                -1 -> {
+                    break@loop
+                }
+
 
                 //UNORDERED LIST
                 1 -> {
@@ -157,6 +175,43 @@ object MarkdownParser {
                     parents.add(element)
                     lastStartIndex = endIndex
                 }
+
+                //ORDERED LIST
+                12 -> {
+                    val fullText = string.subSequence(startIndex, endIndex)
+                    val (order: String, text: String) = "(^[1-9]+\\.)\\s(.+)".toRegex().find(fullText)!!.destructured
+
+                    //find inner elements
+                    val subs = findElements(text)
+                    val element = Element.OrderedListItem(order, text, subs)
+                    parents.add(element)
+
+                    //next find start from position "endIndex" (last regex character)
+                    lastStartIndex = endIndex
+                }
+
+                //IMAGE
+                13 -> {
+                    val fullText = string.subSequence(startIndex, endIndex)
+                    val (altOrigin: String?, urlWithTitle: String) = "\\[(.*)]\\((.*)\\)".toRegex().find(fullText)!!.destructured
+
+                    val url = urlWithTitle.substringBefore(" ")
+                    val title = if (url.length < urlWithTitle.length) {
+                        urlWithTitle.substringAfter(" ") .replace("\"", "")
+                    } else ""
+                    val alt = if (altOrigin.isEmpty()) null else altOrigin
+                    val element = Element.Image(url, alt, title)
+                    parents.add(element)
+                    lastStartIndex = endIndex
+                }
+
+                //MULTILINE
+                14 -> {
+                    text = string.subSequence(startIndex.plus(3), endIndex.minus(3))
+                    val element = Element.BlockCode(text = text)
+                    parents.add(element)
+                    lastStartIndex = endIndex
+                }
             }
         }
         if (lastStartIndex < string.length) {
@@ -220,7 +275,7 @@ sealed class Element() {
     ) : Element()
 
     data class Link(
-        val order: String,
+        val link: String,
         override val text: CharSequence,
         override val elements: List<Element> = emptyList()
     ) : Element()
@@ -238,4 +293,11 @@ sealed class Element() {
     ) : Element() {
         enum class Type { START, END, MIDDLE, SINGLE }
     }
+
+    data class Image(
+        val url: String,
+        val alt: String?,
+        override val text: CharSequence = "",
+        override val elements: List<Element> = emptyList()
+    ) : Element()
 }
