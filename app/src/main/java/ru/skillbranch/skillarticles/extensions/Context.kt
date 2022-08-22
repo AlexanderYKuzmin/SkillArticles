@@ -1,10 +1,15 @@
 package ru.skillbranch.skillarticles.extensions
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
+import android.graphics.Color
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.TypedValue
+import androidx.annotation.AttrRes
+import androidx.annotation.IntegerRes
 
 fun Context.dpToPx(dp: Int): Float {
     return TypedValue.applyDimension(
@@ -20,6 +25,13 @@ fun Context.dpToIntPx(dp: Int): Int {
         dp.toFloat(),
         this.resources.displayMetrics
     ).toInt()
+}
+
+@SuppressLint("ResourceType")
+fun Context.attrValue(@AttrRes attr: Int): Int {
+    val tv = TypedValue()
+    if (theme.resolveAttribute(attr, tv, true)) return tv.data
+    else throw Resources.NotFoundException("Resource with id $attr not found")
 }
 
 /*

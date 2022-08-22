@@ -70,24 +70,21 @@ object LocalDataHolder {
 
 object NetworkDataHolder {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val content = MutableLiveData<List<String>?>(null)
-    private var isDelay = true
+    val content = MutableLiveData<String?>(null)
+    //private var isDelay = true
 
-    fun loadArticleContent(articleId: String): LiveData<List<String>?> {
+    fun loadArticleContent(articleId: String): LiveData<String?> {
         GlobalScope.launch {
-            if (isDelay) delay(1500)
-            withContext(Dispatchers.Main){
-                content.value = listOf(longText)
-            }
-
+            delay(500)
+            content.postValue(longText)
         }
         return content
     }
 
-    @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+    /*@VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun disableDelay(value:Boolean = false) {
         isDelay = !value
-    }
+    }*/
 
     @VisibleForTesting(otherwise = VisibleForTesting.NONE)
     fun clearData(){
@@ -117,13 +114,66 @@ data class AppSettings(
 )
 
 val longText: String = """
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas nibh sapien, consectetur et ultrices quis, convallis sit amet augue. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum et convallis augue, eu hendrerit diam. Curabitur ut dolor at justo suscipit commodo. Curabitur consectetur, massa sed sodales sollicitudin, orci augue maximus lacus, ut elementum risus lorem nec tellus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Praesent accumsan tempor lorem, quis pulvinar justo. Vivamus euismod risus ac arcu pharetra fringilla.
+before header text
+# Header1 first line margin middle line without margin last line with margin
+## Header2 Header2
+### Header3 Header3 Header3
+#### Header4 Header4 Header4 Header4
+##### Header5 Header5 Header5 Header5 Header5
+###### Header6 Header6 Header6 Header6 Header6 Header6
 
-Maecenas cursus vehicula erat, in eleifend diam blandit vitae. In hac habitasse platea dictumst. Duis egestas augue lectus, et vulputate diam iaculis id. Aenean vestibulum nibh vitae mi luctus tincidunt. Fusce iaculis molestie eros, ac efficitur odio cursus ac. In at orci eget eros dapibus pretium congue sed odio. Maecenas facilisis, dolor eget mollis gravida, nisi justo mattis odio, ac congue arcu risus sed turpis.
+after header text and break line
 
-Sed tempor a nibh at maximus. Nam ultrices diam ac lorem auctor interdum. Aliquam rhoncus odio quis dui congue interdum non maximus odio. Phasellus ut orci commodo tellus faucibus efficitur. Nulla congue nunc vel faucibus varius. Sed cursus ut odio ut fermentum. Vivamus mattis vel velit et maximus. Proin in sapien pharetra, ornare metus nec, dictum mauris.
+Emphasis, aka italics, with *asterisks* or _underscores_.
 
-Praesent nisl nisl, iaculis id nulla in, congue eleifend leo. Sed aliquet elementum massa et gravida. Nulla facilisi. Cras convallis vestibulum elit et sodales. Cras consequat eleifend metus non tempus. Vivamus venenatis consequat mollis. Nunc suscipit ipsum at nunc dignissim porta. Sed accumsan tellus non mauris fermentum pulvinar. Morbi felis est, accumsan id est id, dictum interdum nulla. Proin ultrices, ante at placerat venenatis, tortor enim ullamcorper magna, at finibus nisi dui in ante. Vivamus convallis velit tortor, at mattis diam rhoncus vel. Integer at placerat turpis, vel laoreet nibh. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus fermentum tellus malesuada diam facilisis gravida. Quisque a semper ex, at semper dolor.
+Strong emphasis, aka bold, with **asterisks** or __underscores__.
 
-In a turpis suscipit, venenatis arcu id, condimentum nulla. Mauris id felis id metus aliquet facilisis ut sit amet lectus. In aliquam dapibus mollis. Morbi sollicitudin purus ultricies dictum feugiat. Morbi lobortis mollis faucibus. Nunc mattis nec est sagittis semper. Curabitur in dignissim elit.
+Strikethrough uses two tildes. ~~Scratch this.~~
+
+Combined emphasis with **asterisks and _underscores_**.
+or emphasis with __underscores and *asterisks*__.
+or _underscores for italic and **asterisks for inner bold**_.
+or *asterisks for italic and __underscores for inner bold__*.
+or strikethrough ~~two tildes for strike~~
+
+And combine with asterisks and underscores ~~two tildes for strike and __underscores for inner strike bold__ and **asterisks for inner strike bold**~~.
+and combined emphasis together ~~two tildes for strike and __underscores for inner *strike italic bold*__ and **asterisks for inner _strike italic bold_**~~.
+
+* Unordered list can use double **asterisks** or double __underscores__ for emphasis aka **bold**
+- Use minuses for list item and _underscores_ and *asterisks* for emphasis aka *italic*
++ Or use plus for list item and ~~double tildes~~ for strike
+
+1. First ordered list item 
+2. Second item 
+3. Third item.
+
+> Blockquotes are very handy in ~~email~~ to emulate reply text.
+> This line is *part* of __the__ same quote.
+
+Use ` for wrap `inline code` split `code with line break
+not` work `only inline`
+
+simple single line 
+
+Use ``` for wrap block code
+```code block.code block.code block```
+also it work for multiline code block 
+```multiline code block
+multiline code block
+multiline code block
+multiline code block```
+Use three underscore character _ in new line for horizontal divider
+___
+or three asterisks
+***
+or three minus
+---
+
+simple text and break line
+
+For inline link use `[for title]` and `(for link)` 
+example link: [I'm an inline-style link](https://www.google.com)
+simple text and break line
+
+end markdown text
 """.trimIndent()

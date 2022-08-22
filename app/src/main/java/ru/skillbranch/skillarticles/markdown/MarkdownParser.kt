@@ -73,7 +73,6 @@ object MarkdownParser {
                     break
                 }
             }
-            parents.add(Element.Text("Matcher groups = ${matcher.groupCount()}"))
             when (group) {
                 //NOT FOUND -> break
 
