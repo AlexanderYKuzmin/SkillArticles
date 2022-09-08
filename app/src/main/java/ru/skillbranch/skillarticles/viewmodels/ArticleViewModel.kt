@@ -133,8 +133,6 @@ class ArticleViewModel(private val articleId: String, savedStateHandle: SavedSta
             )
         }
 
-        Log.d("VM", "${currentState.content.toString()}")
-
         notify(msg)
     }
 
@@ -154,7 +152,6 @@ class ArticleViewModel(private val articleId: String, savedStateHandle: SavedSta
     }
 
     override fun handleSearch(query: String?) {
-        Log.d("View model", "handle search")
         query ?: return
 
         if (clearContent == null && currentState.content.isNotEmpty()) clearContent =
@@ -162,6 +159,7 @@ class ArticleViewModel(private val articleId: String, savedStateHandle: SavedSta
 
         val result = clearContent.indexesOf(query)
             .map { it to it + query.length }
+
         updateState { it.copy(searchQuery = query, searchResults = result) }
     }
 

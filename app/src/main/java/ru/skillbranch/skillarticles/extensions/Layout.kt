@@ -31,7 +31,15 @@ fun Layout.getLineBottomWithoutSpacing(line: Int): Int {
     val isLastLine = line == lineCount - 1
     val hasLineSpacing = spacingAdd != 0f
 
-    return if (!hasLineSpacing || isLastLine) {
+    val nextLineIsLast = line == lineCount - 2
+
+    val onlyWhiteSpaceIsAfter = if (nextLineIsLast) {
+        val start = getLineStart(line + 1)
+        val lastVisible = getLineVisibleEnd(line + 1)
+        start == lastVisible
+    } else false
+
+    return if (!hasLineSpacing || isLastLine || onlyWhiteSpaceIsAfter) {
         lineBottom + spacingAdd.toInt()
     } else {
         lineBottom - spacingAdd.toInt()

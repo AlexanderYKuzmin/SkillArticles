@@ -16,24 +16,28 @@ interface IMarkdownView {
         offset: Int
     ) {
         clearSearchResult()
-        Log.e("IMarkdownView", "offset = $offset")
-        Log.e("IMarkdownView", "results = ${results.size}")
+        //Log.e("IMarkdownView", "offset = $offset")
+        //Log.e("IMarkdownView", "results = ${results.size}")
         val offsetResult = results
             .map { (start, end) -> start.minus(offset) to end.minus(offset)}
+        Log.d("IMarkdownView", "offsetResult = ${offsetResult.size}")
 
         try {
             offsetResult.forEach {(start, end) ->
+                Log.e("IMarkdownView", "start = $start, end = $end")
                 spannableContent.setSpan(
                     SearchSpan(),
                     start,
                     end,
                     SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
+                Log.e("IMarkdownView", "spans : ${spannableContent.getSpans<SearchSpan>().size}")
             }
         } catch (e : Exception) {
             e.printStackTrace()
             Log.e("IMarkdownView", "${e.message}")
         }
+
     }
 
     fun renderSearchPosition(

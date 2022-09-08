@@ -129,9 +129,9 @@ class MarkdownContentView @JvmOverloads constructor(
             view as IMarkdownView
             //search for child with markdown element offset
             //Log.d("MarkdownContentView", "elements[$index] = ${elements[index]}, offset = ${elements[index].offset}")
-            Log.d("MarkdownContentView", "elements size = ${elements.size}, bounds size = ${bounds.size}")
-            Log.d("MarkdownContentView", "current view: ${view.accessibilityClassName}")
-            Log.d("MarkdownContentView", "current index: $index")
+            //Log.d("MarkdownContentView", "elements size = ${elements.size}, bounds size = ${bounds.size}")
+            //Log.d("MarkdownContentView", "current view: ${view.accessibilityClassName}")
+            //Log.d("MarkdownContentView", "current index: $index")
             view.renderSearchResult(result[index], elements[index].offset)
         }
     }

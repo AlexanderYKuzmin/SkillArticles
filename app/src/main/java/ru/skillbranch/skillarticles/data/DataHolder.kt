@@ -118,15 +118,13 @@ data class AppSettings(
 val longText: String = """
 # Drawing a rounded corner background on text
 Let’s say that we need to draw a **rounded** corner background on text, supporting the following cases:
-"""
-/** Set the background on one line text
+
+* Set the background on one line text
 ![Text on one line](https://miro.medium.com/max/1155/0*PWKx5cM1bjVjA1aW "Text on one line with a rounded corner background")
 * Set the background on text over **two or multiple lines**
 ![Text on multiple lines](https://miro.medium.com/max/1155/0*sdYBIZugLh_DJFvu "Text on multiple lines with a rounded corner background")
 * Set the background on **right-to-left text**
 ![](https://miro.medium.com/max/1155/0*sdYBIZugLh_DJFvu "Right to left text with rounded corner background")
-"""*/
-/*
 How can we implement this? Read on to find out, or jump directly to the [sample code](https://github.com/googlesamples/android-text/tree/master/RoundedBackground-Kotlin).
 ### To span or not to span? This is the question!
 In [previous articles](https://medium.com/google-developers/underspanding-spans-1b91008b97e4) we’ve covered styling sections of text (even [internationalized text](https://medium.com/google-developers/styling-internationalized-text-in-android-f99759fb7b8f)). The solution involved using either framework or custom spans. While spans are a great solution in many cases, they do have some limitations that make them unsuitable for our problem. Appearance spans, like `BackgroundColorSpan`, give us access to the `TextPaint`, allowing us to change elements like the background color of text, but are only able to draw a solid color and can’t control elements like the corner radius.
@@ -216,4 +214,9 @@ The Android text APIs allow you a great deal of freedom to perform styling. Simp
 
 What kind of text styling did you have to do that required custom `TextView` implementations? What kind of issues did you encounter? Tell us in the comments!
 """.trimIndent()
-*/
+
+/*val longText = """
+
+    Ass Get ass so fuck off
+    forever
+""".trimIndent()*/

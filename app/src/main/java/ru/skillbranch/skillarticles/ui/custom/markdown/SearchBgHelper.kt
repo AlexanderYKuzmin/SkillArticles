@@ -120,6 +120,9 @@ class SearchBgHelper(
 
             headerSpans = text.getSpans(spanStart, spanEnd, HeaderSpan::class.java)
 
+            topExtraPadding = 0
+            bottomExtraPadding = 0
+
             //if search
             if (it is SearchFocusSpan) {
                 //if search focus invoke for focus
@@ -134,25 +137,25 @@ class SearchBgHelper(
                     this@SearchBgHelper.bottomExtraPadding =
                         if (spanStart in lastLineBounds || spanEnd in lastLineBounds) bottomExtraPadding else 0
                 }
-
-                startOffset = layout.getPrimaryHorizontal(spanStart)
-                    .toInt()  //начало и конец нашего поискового вхождения
-                endOffset = layout.getPrimaryHorizontal(spanEnd).toInt()
-
-                render = if (startLine == endLine) singleLineRender else multiLineRender
-                render.draw(
-                    canvas,
-                    layout,
-                    startLine,
-                    endLine,
-                    startOffset,
-                    endOffset,
-                    topExtraPadding,
-                    bottomExtraPadding
-                )
             }
+
+            startOffset = layout.getPrimaryHorizontal(spanStart).toInt()  //начало и конец нашего поискового вхождения
+            endOffset = layout.getPrimaryHorizontal(spanEnd).toInt()
+
+            render = if (startLine == endLine) singleLineRender else multiLineRender
+            render.draw(
+                canvas,
+                layout,
+                startLine,
+                endLine,
+                startOffset,
+                endOffset,
+                topExtraPadding,
+                bottomExtraPadding
+            )
         }
     }
+
 
     abstract class SearchBgRender(
         val padding: Int
@@ -169,7 +172,7 @@ class SearchBgHelper(
         )
 
         fun getLineTop(layout: Layout, line: Int): Int {
-            //return layout.getLineTop(line) // todo without padding
+            //return layout.getLineTop(line) // to do without padding
             return layout.getLineTopWithoutPadding(line)
         }
 
@@ -196,7 +199,6 @@ class SearchBgHelper(
             topExtraPadding: Int,
             bottomExtraPadding: Int
         ) {
-            //todo extrapadding
             lineTop = getLineTop(layout, startLine) + topExtraPadding
             lineBottom = getLineBottom(layout, endLine) - bottomExtraPadding
             drawable.setBounds(

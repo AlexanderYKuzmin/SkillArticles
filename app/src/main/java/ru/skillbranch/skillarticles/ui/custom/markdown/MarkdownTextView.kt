@@ -20,6 +20,7 @@ import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import ru.skillbranch.skillarticles.extensions.dpToPx
 import ru.skillbranch.skillarticles.ui.custom.markdown.IMarkdownView
 import ru.skillbranch.skillarticles.ui.custom.markdown.SearchBgHelper
+import ru.skillbranch.skillarticles.ui.custom.spans.SearchSpan
 
 @SuppressLint("AppCompatCustomView")
 class MarkdownTextView @JvmOverloads constructor(
@@ -56,17 +57,19 @@ class MarkdownTextView @JvmOverloads constructor(
         movementMethod = LinkMovementMethod()
         //movementMethod = ScrollingMovementMethod()
     }
+    @SuppressLint("VisibleForTests")
     override fun onDraw(canvas: Canvas) {
+        Log.d("MarkdownTextView", "onDraw!!")
         if (text is Spanned && layout != null) {
             canvas.withTranslation(totalPaddingLeft.toFloat(), totalPaddingRight.toFloat()) {
-                searchBgHelper.draw(canvas, text as Spanned, layout)
+                searchBgHelper.draw(canvas, text as Spannable, layout)
             }
         }
         super.onDraw(canvas)
     }
 
     override fun setTextSize(size: Float) {
-        Log.e("MarkdownTextview", "set text size = $size")
+        //Log.e("MarkdownTextview", "set text size = $size")
         if (isSizeDepend) setLineSpacing(context.dpToPx(if (size == 14f) 8 else 10), 1f)
         super.setTextSize(size)
     }
