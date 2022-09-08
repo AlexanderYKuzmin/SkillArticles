@@ -13,4 +13,6 @@
     <color name="color_on_article_bar">#1C0E42</color>
     <color name="color_divider">#31000000</color>
     <color name="color_submenu_surface">#FFFFFF</color>
+
+    <color name="color_dark_surface">#26262E</color>
 </resources>

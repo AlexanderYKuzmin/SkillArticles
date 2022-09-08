@@ -1,10 +1,15 @@
 package ru.skillbranch.skillarticles.data.repositories
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import ru.skillbranch.skillarticles.data.*
+import ru.skillbranch.skillarticles.ui.custom.markdown.MarkdownElement
+import ru.skillbranch.skillarticles.ui.custom.markdown.MarkdownParser
+import java.lang.RuntimeException
 
 interface IArticleRepository {
-    fun loadArticleContent(articleId: String): LiveData<String?>
+    fun loadArticleContent(articleId: String): LiveData<List<MarkdownElement>?>
     fun getArticle(articleId: String): LiveData<ArticleData?>
     fun loadArticlePersonalInfo(articleId: String): LiveData<ArticlePersonalInfo?>
     fun getAppSettings(): LiveData<AppSettings>
@@ -18,8 +23,16 @@ class ArticleRepository(
     private val prefs: PrefManager = PrefManager()
 ) : IArticleRepository{
 
-    override fun loadArticleContent(articleId: String): LiveData<String?> {
-        return network.loadArticleContent(articleId) // delay 5s
+    override fun loadArticleContent(articleId: String): LiveData<List<MarkdownElement>?> {
+        Log.d("ArticleRepository", "start loading content")
+        val cont = network.loadArticleContent(articleId)
+        Log.d("ArticleRepository", "cont: ${cont.value}")
+        val data = network.loadArticleContent(articleId)
+            .map { str -> str?.let { MarkdownParser.parse(it) } }// delay 5s
+        val mdElements = data.value
+        mdElements?.forEachIndexed { index, markdownElement ->  Log.d("ArticleRepository", "index: $index, content: $markdownElement")}
+
+        return data
     }
 
     override fun getArticle(articleId: String): LiveData<ArticleData?> {

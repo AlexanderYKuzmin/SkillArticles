@@ -13,7 +13,9 @@ import ru.skillbranch.skillarticles.extensions.data.toAppSettings
 import ru.skillbranch.skillarticles.extensions.data.toArticlePersonalInfo
 import ru.skillbranch.skillarticles.extensions.format
 import ru.skillbranch.skillarticles.extensions.indexesOf
-import ru.skillbranch.skillarticles.markdown.MarkdownParser
+import ru.skillbranch.skillarticles.ui.custom.markdown.MarkdownElement
+import ru.skillbranch.skillarticles.ui.custom.markdown.MarkdownParser
+import ru.skillbranch.skillarticles.ui.custom.markdown.clearContent
 
 class ArticleViewModel(private val articleId: String, savedStateHandle: SavedStateHandle) :
     BaseViewModel<ArticleState>(ArticleState(), savedStateHandle), IArticleViewModel {
@@ -66,8 +68,10 @@ class ArticleViewModel(private val articleId: String, savedStateHandle: SavedSta
     }
 
     // load text from network
-    override fun getArticleContent(): LiveData<String?> {
-        return repository.loadArticleContent(articleId)
+    override fun getArticleContent(): LiveData<List<MarkdownElement>?> {
+        val liveDataContent = repository.loadArticleContent(articleId)
+        Log.d("Article VM", "content: ${liveDataContent.value.toString()}")
+        return liveDataContent
     }
 
     // load data fro mdb
@@ -129,6 +133,8 @@ class ArticleViewModel(private val articleId: String, savedStateHandle: SavedSta
             )
         }
 
+        Log.d("VM", "${currentState.content.toString()}")
+
         notify(msg)
     }
 
@@ -151,7 +157,8 @@ class ArticleViewModel(private val articleId: String, savedStateHandle: SavedSta
         Log.d("View model", "handle search")
         query ?: return
 
-        if (clearContent == null) clearContent = MarkdownParser.clear(currentState.content)
+        if (clearContent == null && currentState.content.isNotEmpty()) clearContent =
+            currentState.content.clearContent()
 
         val result = clearContent.indexesOf(query)
             .map { it to it + query.length }
@@ -169,6 +176,10 @@ class ArticleViewModel(private val articleId: String, savedStateHandle: SavedSta
 
     override fun handleDownResult() {
         updateState { it.copy(searchPosition = it.searchPosition.inc()) }
+    }
+
+    override fun handleCopyCode() {
+        notify(Notify.TextMessage("Code copy to clipboard"))
     }
 }
 
@@ -192,11 +203,11 @@ data class ArticleState(
     val date: String? = null, //дата публикации
     val author: Any? = null,//автор статьи
     val poster: String? = null, //обложка статьи
-    val content: String = "Loading",//контент
+    val content: List<MarkdownElement> = emptyList(),//контент
     val reviews: List<Any> = emptyList() //отзывы
 ) : VMState {
     override fun toBundle(): Bundle {
-        val map = copy(content = "Loading", isLoadingContent = true)
+        val map = copy(content = emptyList(), isLoadingContent = true)
             .asMap()
             .toList()
             .toTypedArray()
@@ -226,7 +237,7 @@ data class ArticleState(
             date = map["date"] as String,
             author = map["author"] as Any,
             poster = map["poster"] as String,
-            content = map["content"] as String,
+            content = map["content"] as List<MarkdownElement>,
             reviews = map["reviews"] as List<Any>
 
         )

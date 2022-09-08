@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- global colors -->
+    <attr format="color" name="darkSurfaceColor"/>
+    <attr format="color" name="lightSurfaceColor"/>
+    <attr format="color" name="darkOnSurfaceColor"/>
+    <attr format="color" name="lightOnSurfaceColor"/>
+
+    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
 
         <item name="windowNoTitle">true</item>
@@ -19,6 +26,10 @@
         <item name="colorOnSurface">@color/color_on_surface</item>
 
         <item name="snackbarStyle">@style/CustomSnackbar</item>
+        <item name="darkSurfaceColor">#272727</item>
+        <item name="lightSurfaceColor">#F6F6F6</item>
+        <item name="darkOnSurfaceColor">#F6F6F6</item>
+        <item name="lightOnSurfaceColor">#202020</item>
     </style>
 
     <style name="ArticleBarsTheme" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar">

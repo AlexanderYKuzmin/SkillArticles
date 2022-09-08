@@ -1,13 +1,11 @@
-package ru.skillbranch.skillarticles.markdown
+package ru.skillbranch.skillarticles.ui.custom.markdown
 
 import android.content.Context
 import android.graphics.Typeface
 import android.text.SpannableStringBuilder
 import android.text.SpannedString
-import android.text.style.QuoteSpan
 import android.text.style.StrikethroughSpan
 import android.text.style.StyleSpan
-import android.text.style.URLSpan
 import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.text.buildSpannedString
@@ -16,7 +14,7 @@ import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.attrValue
 //import ru.skillbranch.skillarticles.extensions.attrValue
 import ru.skillbranch.skillarticles.extensions.dpToPx
-import ru.skillbranch.skillarticles.markdown.spans.*
+import ru.skillbranch.skillarticles.ui.custom.spans.*
 
 class MarkdownBuilder(context: Context) {
     private val colorSecondary = context.attrValue(R.attr.colorSecondary)
@@ -34,14 +32,14 @@ class MarkdownBuilder(context: Context) {
     private val cornerRadius = context.dpToPx(8)
     private val linkIcon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_link_24)!!
 
-    fun markdownToSpan(string: String): SpannedString {
-        val markdown: MarkdownText = MarkdownParser.parse(string)
-        markdown.elements.forEach {
+    fun markdownToSpan(textContent: MarkdownElement.Text): SpannedString {
+        //val markdown: MarkdownText = MarkdownParser.parse(textContent)
+        /*markdown.elements.forEach {
             Log.d("MarkdownBuilder", "element = \"$it\"")
-        }
+        }*/
 
         return buildSpannedString {
-            markdown.elements.forEach { buildElement(it, this) }
+            textContent.elements.forEach { buildElement(it, this) }
         }
     }
 

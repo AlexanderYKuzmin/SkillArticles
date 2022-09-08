@@ -21,12 +21,14 @@ interface IArticleView {
 
     fun renderSearchResult(searchResult: List<Pair<Int, Int>>)
 
-    fun renderSearchPosition(searchPosition: Int)
+    fun renderSearchPosition(searchPosition: Int, searchResult: List<Pair<Int, Int>>)
 
     fun clearSearchResult()
 
     fun showSearchbar(resultsCount: Int, searchPosition: Int)
 
     fun hideSearchbar()
+
+    fun setCopyListener()
 
 }
