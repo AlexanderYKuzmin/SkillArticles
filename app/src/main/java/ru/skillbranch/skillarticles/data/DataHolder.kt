@@ -140,9 +140,9 @@ Depending on the position of the text, we need to draw four different drawables 
 ![](https://miro.medium.com/max/507/0*jPTOmlEs5d6MLtuV "The four drawables that need to be drawn depending on the position of the text")
 To position the background, we need to:
 
-* Determine whether the text spans multiple lines
-* Find the start and end lines
-* Find the start and end offset depending on the paragraph direction
+* Determine whether the text spans multiple lines 
+* Find the start and end lines 
+* Find the start and end offset depending on the paragraph direction 
 
 All of these can be computed based on the text [Layout](https://developer.android.com/reference/android/text/Layout). To render the background behind the text we need access to the `Canvas`. A custom `TextView` has access to all of the information necessary to position the drawables and render them.
 Our solution involves splitting our problem into 4 parts and creating classes dealing with them individually:
@@ -161,9 +161,9 @@ We created a `SearchBgHelper` class that:
 
 In the `SearchBgHelper.draw` method, for every `Annotation` span found in the text, we get the start and end index of the span, find the line number for each and then compute the start and end character offset (within the line). Then, we use the `SearchBgRenderer` implementations to render the background.
 ```fun draw(canvas: Canvas, text: Spanned, layout: Layout) {
-    // ideally the calculations here should be cached since
+    // ideally the calculations here should be cached since 
     // they are not cheap. However, proper
-    // invalidation of the cache is required whenever
+    // invalidation of the cache is required whenever 
     // anything related to text has changed.
     val spans = text.getSpans(0, text.length, Annotation::class.java)
     spans.forEach { span ->
@@ -173,11 +173,11 @@ In the `SearchBgHelper.draw` method, for every `Annotation` span found in the te
             val startLine = layout.getLineForOffset(spanStart)
             val endLine = layout.getLineForOffset(spanEnd)
 
-            // start can be on the left or on the right depending
+            // start can be on the left or on the right depending 
             // on the language direction.
             val startOffset = (layout.getPrimaryHorizontal(spanStart)
                 + -1 * layout.getParagraphDirection(startLine) * horizontalPadding).toInt()
-            // end can be on the left or on the right depending
+            // end can be on the left or on the right depending 
             // on the language direction.
             val endOffset = (layout.getPrimaryHorizontal(spanEnd)
                 + layout.getParagraphDirection(endLine) * horizontalPadding).toInt()

@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.VisibleForTesting
 import androidx.core.view.children
 import ru.skillbranch.skillarticles.extensions.dpToIntPx
 import kotlin.properties.Delegates
@@ -164,10 +165,7 @@ class MarkdownContentView @JvmOverloads constructor(
     }
 }
 
-
-
-
-private fun List<Pair<Int, Int>>.groupByBounds(bounds: List<Pair<Int, Int>>): List<MutableList<Pair<Int, Int>>> {
+fun List<Pair<Int, Int>>.groupByBounds(bounds: List<Pair<Int, Int>>): List<MutableList<Pair<Int, Int>>> {
     var resultList = mutableListOf<MutableList<Pair<Int, Int>>>()
 
     bounds.forEach { singleBounds ->

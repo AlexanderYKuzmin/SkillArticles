@@ -40,7 +40,7 @@ fun Layout.getLineBottomWithoutSpacing(line: Int): Int {
     } else false
 
     return if (!hasLineSpacing || isLastLine || onlyWhiteSpaceIsAfter) {
-        lineBottom + spacingAdd.toInt()
+        lineBottom
     } else {
         lineBottom - spacingAdd.toInt()
     }

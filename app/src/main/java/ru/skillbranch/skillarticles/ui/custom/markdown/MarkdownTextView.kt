@@ -45,7 +45,7 @@ class MarkdownTextView @JvmOverloads constructor(
     private val searchPadding = context.dpToIntPx(56)
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    private val searchBgHelper = SearchBgHelper(context) { top, bottom ->
+    var searchBgHelper = SearchBgHelper(context) { top, bottom ->
         focusRect.set(0, top - searchPadding, width, bottom + searchPadding)
         //show rect on view with animation
         requestRectangleOnScreen(focusRect, false)

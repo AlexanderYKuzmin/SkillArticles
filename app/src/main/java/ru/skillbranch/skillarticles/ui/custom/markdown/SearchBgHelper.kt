@@ -11,6 +11,8 @@ import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.core.graphics.ColorUtils
 import androidx.core.text.getSpans
+import com.google.android.material.internal.ViewUtils.dpToPx
+import ru.skillbranch.skillarticles.App
 import ru.skillbranch.skillarticles.R
 import ru.skillbranch.skillarticles.extensions.*
 import ru.skillbranch.skillarticles.ui.custom.spans.HeaderSpan
@@ -177,7 +179,7 @@ class SearchBgHelper(
         }
 
         fun getLineBottom(layout: Layout, line: Int): Int {
-            //return layout.getLineBottom(line) // todo without padding
+            //return layout.getLineBottom(line)
             return layout.getLineBottomWithoutPadding(line)
         }
     }
@@ -188,6 +190,7 @@ class SearchBgHelper(
     ) : SearchBgRender(padding) {
         private var lineTop: Int = 0
         private var lineBottom: Int = 0
+        private var lineHeight = 0
 
         override fun draw(
             canvas: Canvas,
@@ -200,13 +203,14 @@ class SearchBgHelper(
             bottomExtraPadding: Int
         ) {
             lineTop = getLineTop(layout, startLine) + topExtraPadding
-            lineBottom = getLineBottom(layout, endLine) - bottomExtraPadding
+            lineBottom = getLineBottom(layout, startLine) - bottomExtraPadding
+            lineHeight = lineBottom - lineTop
             drawable.setBounds(
                 startOffset - padding,
-                lineTop,
+                (lineTop - lineHeight / 2.5).toInt(),
                 endOffset + padding,
-                lineBottom
-            ) //не понял зачем -padding и +padding
+                (lineBottom - lineHeight / 2.5).toInt()
+            )
             drawable.draw(canvas)
         }
     }
@@ -242,7 +246,7 @@ class SearchBgHelper(
 
             //draw middle line
             for (line in startLine.inc() until endLine) {
-                lineTop = getLineTop(layout, line) + topExtraPadding
+                lineTop = getLineTop(layout, line)
                 lineBottom = getLineBottom(layout, line)
                 drawableMiddle.setBounds(
                     layout.getLineLeft(line).toInt() - padding,
@@ -279,6 +283,7 @@ class SearchBgHelper(
             bottom: Int
         ) {
             drawableRight.setBounds(start, top, end, bottom)
+            drawableRight.draw(canvas)
         }
     }
 }

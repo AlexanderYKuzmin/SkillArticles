@@ -254,7 +254,7 @@ object MarkdownParser {
     }
 }
 
-data class MarkdownText(val elements: List<Element>)
+//data class MarkdownText(val elements: List<Element>)
 
 sealed class MarkdownElement() {
     abstract val offset: Int
